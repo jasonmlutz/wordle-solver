@@ -1,13 +1,12 @@
 <script setup>
-import {ref} from "vue"
+import {reactive} from "vue"
 import { v4 as uuid } from 'uuid';
 
 import alphabet from "./resources/Alphabet"
 import Letter from "./components/Letter.vue";
 
-const letters = ref(alphabet.slice(0,6).map(el => (
+const letters = reactive(alphabet.slice(0,6).map(el => (
   {letter: el, id: uuid()})))
-let i = 0;
 </script>
 
 <template>
