@@ -1,5 +1,5 @@
 <script setup>
-import {ref, computed} from "vue"
+import {ref, computed, provide} from "vue"
 import { v4 as uuid } from 'uuid';
 
 import ValidRows from "./components/ValidRows.vue";
@@ -30,6 +30,18 @@ function generateRow(word) {
   ))
   return {letters: letters, id: submittedRows.value.length + 1}
 }
+
+const store = ref([])
+
+function updateStore(letter, position, flag) {
+  store.value = store.value.filter(el => (
+    !(el.position === position && el.letter === letter)
+  ))
+  store.value.push({letter, position, flag})
+}
+
+provide("store", {store, updateStore})
+
 
 </script>
 
@@ -64,7 +76,7 @@ function generateRow(word) {
         @keyup.enter="handleSubmit"
       >
       <button
-        class="bg-white border-2 border-gray-600 rounded-md text-black px-1 uppercase ml-2 hover:bg-gray-400"
+        class="bg-white border rounded-md text-black px-1 uppercase ml-2 hover:bg-gray-400"
         @click="handleSubmit"
       >
         submit
