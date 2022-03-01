@@ -9,7 +9,27 @@ import EmptyRows from "./components/EmptyRows.vue";
 const letters = reactive(alphabet.slice(0,5).map(el => (
   {letter: el, id: uuid()})))
 
-const emptyRowCount = ref(5)
+const emptyRowCount= ref(5)
+
+const newWord = ref("")
+
+function handleSubmit() {
+  if (newWord.value.length !== 5) {
+    window.alert("please enter a 5-letter word")
+  } else {
+    console.log(newWord.value.toUpperCase())
+    emptyRowCount.value -= 1
+    generateRow(newWord.value)
+  }
+}
+
+function generateRow(word) {
+  let letters = word.split("").map((letter, index) => (
+    {letter: letter, id: uuid(), position: index}
+  ))
+  return letters
+}
+
 </script>
 
 
@@ -40,11 +60,16 @@ const emptyRowCount = ref(5)
       class="pt-4 flex justify-center w-4/6"
     >
       <input
+        v-model="newWord"
         type="text"
         placeholder="5-letter guess"
         class="text-black px-1 uppercase flex-1"
+        @keyup.enter="handleSubmit"
       >
-      <button class="bg-white border-2 border-gray-600 rounded-md text-black px-1 uppercase ml-2 hover:bg-gray-400">
+      <button
+        class="bg-white border-2 border-gray-600 rounded-md text-black px-1 uppercase ml-2 hover:bg-gray-400"
+        @click="handleSubmit"
+      >
         submit
       </button>
     </div>
