@@ -5,9 +5,9 @@ import alphabet from '../resources/Alphabet';
   const props = defineProps({
     letter: {
       type: String,
-      default: "",
+      default: " ",
       validator(value) {
-        return value.length === 0 || (value.length === 1 && alphabet.includes(value.toUpperCase(0)))
+        return ((value === " ") || alphabet.includes(value.toUpperCase(0)))
       }
     },
     id: {
@@ -24,8 +24,12 @@ import alphabet from '../resources/Alphabet';
   }
 
   const flaggedClasses = computed(() => {
-    let classes = "m-1 h-[42px] w-[42px] flex flex-row justify-center";
-    switch (flag.value) {
+    let classes = "m-1 h-[42px] w-[42px] flex flex-row justify-center"
+    if (props.letter === " ") {
+      classes += " bg-black border-2 border-gray-600";
+      return classes
+    } else {
+      switch (flag.value) {
       case 0:
        classes += " bg-gray-600"
        break;
@@ -38,7 +42,9 @@ import alphabet from '../resources/Alphabet';
       default:
         break;
     }
-    return classes })
+    return classes
+    }})
+
 </script>
 
 <template>
