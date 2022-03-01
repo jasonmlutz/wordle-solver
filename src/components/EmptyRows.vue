@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from "vue"
+import {ref, computed} from "vue"
 import Letter from "./Letter.vue"
 
 const props = defineProps({
@@ -21,11 +21,11 @@ const emptyLetters = ref([
   {key: i++, letter: " "},
 ])
 
-const rows = ref(
+const rows = computed(() =>
   Array.from(Array(props.count)).map((e, i) => {
     return {key: i}
-  }
-  ))
+  })
+)
 
 </script>
 
