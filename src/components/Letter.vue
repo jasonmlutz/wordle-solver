@@ -1,6 +1,8 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, inject, watch, onMounted} from 'vue';
 import alphabet from '../resources/Alphabet';
+
+  const { updateStore } = inject("store");
 
   const props = defineProps({
     letter: {
@@ -29,6 +31,16 @@ import alphabet from '../resources/Alphabet';
   function toggleFlag () {
     flag.value = (flag.value + 1) % 3
   }
+
+  watch(flag, () => {
+    console.log(props.letter, props.position, flag.value)
+    updateStore(props.letter, props.position, flag.value)
+  })
+
+  onMounted(() => {
+    console.log(props.letter, props.position, flag.value)
+    updateStore(props.letter, props.position, flag.value)
+  })
 
   const flaggedClasses = computed(() => {
     let classes = "m-1 h-[52px] w-[52px] flex flex-row justify-center"
