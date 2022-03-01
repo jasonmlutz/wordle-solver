@@ -11,7 +11,10 @@ let i = 0;
 </script>
 
 <template>
-  <div class="container mx-auto bg-gray-500 p-4 border border-white rounded-md flex flex-col items-center">
+  <header class="text-xl text-center pt-4">
+    Wordle Solver
+  </header>
+  <div class="flex flex-col items-center h-4/7 pt-4">
     <ul class="flex flex-row justify-between w-[300px]">
       <li
         v-for="letter in letters"
