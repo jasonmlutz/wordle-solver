@@ -4,6 +4,8 @@ import TodoList from './components/TodoList.vue';
 </script>
 
 <template>
-  <UserInfoVue />
-  <TodoList />
+  <div class="container mx-auto bg-gray-500 p-4 border border-white rounded-md flex flex-col items-center">
+    <UserInfoVue />
+    <TodoList />
+  </div>
 </template>
