@@ -4,17 +4,18 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview --port 5050",
-    "pretty": "prettier --write \"./**/*.{js,jsx,json,vue}\""
+    "preview": "vite preview --port 5050"
   },
   "dependencies": {
     "vue": "^3.2.31"
   },
   "devDependencies": {
-    "prettier": "^2.5.1",
     "@vitejs/plugin-vue": "^2.2.2",
+    "autoprefixer": "^10.4.2",
     "eslint": "^8.10.0",
     "eslint-plugin-vue": "^8.5.0",
+    "postcss": "^8.4.7",
+    "tailwindcss": "^3.0.23",
     "vite": "^2.8.4"
   }
 }
