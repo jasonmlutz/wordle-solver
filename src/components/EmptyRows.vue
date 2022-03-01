@@ -1,6 +1,5 @@
 <script setup>
 import {ref, computed} from "vue"
-import Letter from "./Letter.vue"
 
 const props = defineProps({
   count: {
@@ -40,9 +39,13 @@ const rows = computed(() =>
       :key="letter.id"
       class="w-[60px] h-[60px]"
     >
-      <Letter
-        :letter="letter.letter"
-      />
+      <div class="m-1 h-[52px] w-[52px] flex flex-row justify-center bg-black border-2 border-gray-600">
+        <div
+          class="text-3xl pt-1.5 uppercase"
+        >
+          {{ letter.letter }}
+        </div>
+      </div>
     </li>
   </ul>
 </template>
