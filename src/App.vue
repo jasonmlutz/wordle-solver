@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 
 import alphabet from "./resources/Alphabet"
 import Letter from "./components/Letter.vue";
-import EmptyRow from "./components/EmptyRow.vue";
+import EmptyRows from "./components/EmptyRows.vue";
 
 const letters = reactive(alphabet.slice(0,5).map(el => (
   {letter: el, id: uuid()})))
@@ -33,7 +33,7 @@ const emptyRowCount = ref(5)
           />
         </li>
       </ul>
-      <EmptyRow :copies="emptyRowCount" />
+      <EmptyRows :count="emptyRowCount" />
     </div>
     <div
       id="inputContainer"

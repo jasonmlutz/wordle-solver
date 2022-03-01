@@ -3,7 +3,7 @@ import {ref} from "vue"
 import Letter from "./Letter.vue"
 
 const props = defineProps({
-  copies: {
+  count: {
     type: Number,
     default: 1,
     validator(value) {
@@ -22,7 +22,7 @@ const emptyLetters = ref([
 ])
 
 const rows = ref(
-  Array.from(Array(props.copies)).map((e, i) => {
+  Array.from(Array(props.count)).map((e, i) => {
     return {key: i}
   }
   ))
