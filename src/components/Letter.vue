@@ -60,7 +60,7 @@ import alphabet from '../resources/Alphabet';
     @click="toggleFlag"
   >
     <div
-      class="text-3xl pt-1.5"
+      class="text-3xl pt-1.5 uppercase"
     >
       {{ letter }}
     </div>
