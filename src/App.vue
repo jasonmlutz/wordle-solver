@@ -4,6 +4,7 @@ import { v4 as uuid } from 'uuid';
 
 import alphabet from "./resources/Alphabet"
 import Letter from "./components/Letter.vue";
+import EmptyRow from "./components/EmptyRow.vue";
 
 const letters = reactive(alphabet.slice(0,6).map(el => (
   {letter: el, id: uuid()})))
@@ -26,5 +27,10 @@ const letters = reactive(alphabet.slice(0,6).map(el => (
         />
       </li>
     </ul>
+    <EmptyRow />
+    <EmptyRow />
+    <EmptyRow />
+    <EmptyRow />
+    <EmptyRow />
   </div>
 </template>
