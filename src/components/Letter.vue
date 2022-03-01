@@ -24,7 +24,7 @@ import alphabet from '../resources/Alphabet';
   }
 
   const flaggedClasses = computed(() => {
-    let classes = "m-1 h-[42px] w-[42px] flex flex-row justify-center"
+    let classes = "m-1 h-[52px] w-[52px] flex flex-row justify-center"
     if (props.letter === " ") {
       classes += " bg-black border-2 border-gray-600";
       return classes
@@ -53,7 +53,7 @@ import alphabet from '../resources/Alphabet';
     @click="toggleFlag"
   >
     <div
-      class="text-3xl"
+      class="text-3xl pt-1.5"
     >
       {{ letter }}
     </div>
