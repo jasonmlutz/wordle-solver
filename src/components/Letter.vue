@@ -14,6 +14,13 @@ import alphabet from '../resources/Alphabet';
       type: String,
       default: `${Date.now()}`
     },
+    position: {
+      type: Number,
+      default: undefined,
+      validator(value) {
+        return [0, 1, 2, 3, 4, 5].includes(value)
+      }
+    }
   })
 
   // think of flags as the index of the flag in flags = ["absent", "present", "correct"]
