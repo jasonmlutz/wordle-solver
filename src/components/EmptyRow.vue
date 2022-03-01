@@ -6,7 +6,7 @@ const props = defineProps({
   copies: {
     type: Number,
     default: 1,
-    validate(value) {
+    validator(value) {
       return [0, 1, 2, 3, 4, 5, 6].includes(value)
     }
   }
