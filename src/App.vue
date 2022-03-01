@@ -42,8 +42,14 @@ function generateRow(word) {
     class="flex flex-col items-center pt-4"
   >
     <div id="letterGrid">
-      <ValidRows :rows="submittedRows" />
-      <EmptyRows :count="emptyRowCount" />
+      <ValidRows
+        v-if="submittedRows.length > 0"
+        :rows="submittedRows"
+      />
+      <EmptyRows
+        v-if="submittedRows.length < 6"
+        :count="emptyRowCount"
+      />
     </div>
     <div
       v-if="submittedRows.length < 6"
