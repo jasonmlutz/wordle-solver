@@ -22,7 +22,7 @@ function handleSubmit() {
       placeholder="enter a name"
       @keyup.enter="handleSubmit"
     ><button
-      class="bg-white text-black mx-2 mb-2 p-2 border border-black rounded-md hover:bg-gray-200"
+      class="bg-white text-black mx-2 mb-2 p-2 border border-black rounded-md hover:bg-gray-200 uppercase"
       @click="handleSubmit"
     >
       SUBMIT
