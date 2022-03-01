@@ -6,8 +6,8 @@ import alphabet from "./resources/Alphabet"
 import Letter from "./components/Letter.vue";
 import EmptyRows from "./components/EmptyRows.vue";
 
-const letters = reactive(alphabet.slice(0,5).map(el => (
-  {letter: el, id: uuid()})))
+const letters = reactive(alphabet.slice(0,5).map((el,index) => (
+  {letter: el, id: uuid(), position: index})))
 
 const emptyRowCount= ref(5)
 
@@ -50,6 +50,7 @@ function generateRow(word) {
           <Letter
             :key="letter.id"
             :letter="letter.letter"
+            :position="letter.position"
           />
         </li>
       </ul>
