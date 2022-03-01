@@ -4,6 +4,7 @@ import { v4 as uuid } from 'uuid';
 
 import ValidRows from "./components/ValidRows.vue";
 import EmptyRows from "./components/EmptyRows.vue";
+import Solution from "./components/Solution.vue";
 
 const submittedRows = ref([]);
 
@@ -63,5 +64,6 @@ function generateRow(word) {
         submit
       </button>
     </div>
+    <Solution v-if="submittedRows.length > 0" />
   </div>
 </template>
