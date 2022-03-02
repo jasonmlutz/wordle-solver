@@ -27,6 +27,11 @@ onMounted(() => {
 
 const submittedLetters = ref([]);
 
+const showKeyboard = ref(true);
+function toggleKeyboard() {
+  showKeyboard.value = !showKeyboard.value
+}
+
 const emptySquareCount= computed(() => {
   return 30 - submittedLetters.value.length
 })
@@ -51,7 +56,6 @@ function deleteLastLetter() {
 const store = ref([])
 
 function updateStore(letter, position, flag, index) {
-  console.log(arguments)
   store.value = store.value.filter(el => (
     !(el.position === position && el.letter === letter)
   ))
@@ -86,8 +90,16 @@ provide("store", {store, updateStore})
           :count="emptySquareCount"
         />
       </ul>
-      <Solution v-if="submittedLetters.length > 0" />
-      <Keyboard />
+      <Solution
+        :show-keyboard="showKeyboard"
+        :toggle-keyboard="toggleKeyboard"
+      />
+      <Keyboard
+        v-if="showKeyboard"
+        :delete-last-letter="deleteLastLetter"
+        :handle-submit="handleSubmit"
+        :toggle-keyboard="toggleKeyboard"
+      />
     </div>
   </div>
 </template>

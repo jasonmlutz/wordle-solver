@@ -2,6 +2,16 @@
 import { inject, computed } from "vue"
 import {words} from "../resources/Words"
 
+const props = defineProps({
+  toggleKeyboard: {
+    type: Function,
+  },
+  showKeyboard: {
+    type: Boolean,
+    default: false
+  }
+})
+
 const {store} = inject("store")
 
 function wordContainsAbsentLetter(word) {
@@ -64,7 +74,7 @@ const absentLetters = computed(() => {
 </script>
 
 <template>
-  <ul
+  <!-- <ul
     class="pt-4"
   >
     <li>
@@ -76,23 +86,24 @@ const absentLetters = computed(() => {
     <li>
       Letters in answer, known position: {{ correctLetters.join(", ") }}
     </li>
-  </ul>
-  <!-- <button
-    class="bg-white border rounded-md text-black px-1 uppercase ml-2 hover:bg-gray-400 mt-4"
-    @click="filterWords"
-  >
-    SOLVE
-  </button> -->
+  </ul> -->
   <div
-    v-if="filteredWords && filteredWords.length < 25"
-    class="pt-4 px-4 uppercase"
+    v-if="filteredWords && filteredWords.length < 500 && !showKeyboard"
+    class="py-2 px-3 mt-2 uppercase bg-gray-800 h-[150px] w-[350px] overflow-y-auto"
   >
-    Words: {{ filteredWords.join(", ") }}
+    {{ filteredWords.join(", ") }}
   </div>
   <div
     v-if="filteredWords"
     class="pt-4"
   >
-    Count: {{ filteredWords.length }}
+    Potential Solutions: {{ filteredWords.length }}
   </div>
+  <button
+    v-if="!showKeyboard"
+    class="bg-white border rounded-md text-black px-1 uppercase ml-2 hover:bg-gray-400 mt-4 uppercase"
+    @click="toggleKeyboard"
+  >
+    show keyboard
+  </button>
 </template>
