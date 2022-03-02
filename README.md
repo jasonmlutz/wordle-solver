@@ -1,6 +1,6 @@
 # Wordle Solver
 
-User-friendly tool for find potential solutions to the popular puzzle game [Wordle](https://www.nytimes.com/games/wordle/index.html). 
+User-friendly tool for finding potential solutions to the popular puzzle game [Wordle](https://www.nytimes.com/games/wordle/index.html) and its variations.
 
 ## Tech
 Built using [Vue](https://vuejs.org/) and styled using [Tailwind CSS](https://tailwindcss.com/). Deployed to [Heroku](https://www.heroku.com/home). 
