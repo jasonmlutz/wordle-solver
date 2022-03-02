@@ -20,7 +20,14 @@ import alphabet from '../resources/Alphabet';
       type: Number,
       default: undefined,
       validator(value) {
-        return [0, 1, 2, 3, 4, 5].includes(value)
+        return [0, 1, 2, 3, 4].includes(value)
+      }
+    },
+    index: {
+      type: Number,
+      default: 0,
+      validator(value) {
+        return Array.from(Array(30)).map((_, i) => i).includes(value)
       }
     }
   })
@@ -33,13 +40,11 @@ import alphabet from '../resources/Alphabet';
   }
 
   watch(flag, () => {
-    console.log(props.letter, props.position, flag.value)
-    updateStore(props.letter, props.position, flag.value)
+    updateStore(props.letter, props.position, flag.value, props.index)
   })
 
   onMounted(() => {
-    console.log(props.letter, props.position, flag.value)
-    updateStore(props.letter, props.position, flag.value)
+    updateStore(props.letter, props.position, flag.value, props.index)
   })
 
   const flaggedClasses = computed(() => {

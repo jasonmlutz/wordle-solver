@@ -35,14 +35,14 @@ const filteredWords= computed(() => {
 // correct
 const correctLetters = computed(() => {
   const letters = store.value.filter(el => el.flag === 2)
-    .map(el => el.letter)
+    .map(el => el.letter.toUpperCase())
   return [...new Set(letters)].sort()
 })
 
 // incorrect
 const incorrectLetters = computed(() => {
   const letters = store.value.filter(el => el.flag === 1)
-    .map(el => el.letter)
+    .map(el => el.letter.toUpperCase())
     // .filter(letter => (
     //   !correctLetters.value.includes(letter)
     // ))
@@ -52,7 +52,7 @@ const incorrectLetters = computed(() => {
 // absent
 const absentLetters = computed(() => {
   const letters = store.value.filter(el => el.flag === 0)
-    .map(el => el.letter)
+    .map(el => el.letter.toUpperCase())
     // .filter(letter => (
     //   !correctLetters.value.includes(letter) &&
     //   !incorrectLetters.value.includes(letter)

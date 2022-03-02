@@ -1,43 +1,61 @@
 <script setup>
-import {ref, computed, provide} from "vue"
+import {ref, computed, provide, onMounted, onUnmounted} from "vue"
 import { v4 as uuid } from 'uuid';
 
-import ValidRows from "./components/ValidRows.vue";
-import EmptyRows from "./components/EmptyRows.vue";
+import alphabet from "./resources/Alphabet";
+
+import ValidSquares from "./components/ValidSquares.vue";
+import EmptySquares from "./components/EmptySquares.vue";
 import Solution from "./components/Solution.vue";
+import Keyboard from "./components/Keyboard.vue"
 
-const submittedRows = ref([]);
+onMounted(() => {
+    window.addEventListener("keypress", function(e) {
+      const letter = String.fromCharCode(e.keyCode);
+      if (alphabet.includes(letter.toUpperCase())) {
+        handleSubmit(letter)
+      }
+    }.bind(this));
+    window.addEventListener("keydown", function(e) {
+      var key = e.keyCode || e.charCode;
+      if ( key === 8 || key === 46) {
+        deleteLastLetter()
+      }
+    })
+  }
+)
 
-const emptyRowCount= computed(() => {
-  return 6 - submittedRows.value.length
+const submittedLetters = ref([]);
+
+const emptySquareCount= computed(() => {
+  return 30 - submittedLetters.value.length
 })
 
-const newWord = ref("")
-
-function handleSubmit() {
-  if (newWord.value.length !== 5) {
-    window.alert("please enter a 5-letter word")
-  } else {
-    console.log(newWord.value.toUpperCase())
-    submittedRows.value.push(generateRow(newWord.value.toUpperCase()))
-    newWord.value = ""
+function handleSubmit(letter) {
+  if (submittedLetters.value.length < 30 && alphabet.includes(letter.toUpperCase())) {
+    const newLetter = {
+      letter: letter, 
+      id: uuid(), 
+      position: (submittedLetters.value.length + 1) % 5, 
+      index: submittedLetters.value.length,
+    }
+    submittedLetters.value.push(newLetter)
   }
 }
 
-function generateRow(word) {
-  let letters = word.split("").map((letter, index) => (
-    {letter: letter, id: uuid(), position: index}
-  ))
-  return {letters: letters, id: submittedRows.value.length + 1}
+function deleteLastLetter() {
+  const lastLetter = submittedLetters.value.pop()
+  store.value = store.value.filter(data => data.index !== lastLetter.index)
 }
 
 const store = ref([])
 
-function updateStore(letter, position, flag) {
+function updateStore(letter, position, flag, index) {
+  console.log(arguments)
   store.value = store.value.filter(el => (
     !(el.position === position && el.letter === letter)
   ))
-  store.value.push({letter, position, flag})
+  store.value.push({letter, position, flag, index})
 }
 
 provide("store", {store, updateStore})
@@ -57,36 +75,19 @@ provide("store", {store, updateStore})
     <div
       class="flex flex-col items-center pt-2 md:pt-4"
     >
-      <div id="letterGrid">
-        <ValidRows
-          v-if="submittedRows.length > 0"
-          :rows="submittedRows"
-        />
-        <EmptyRows
-          v-if="submittedRows.length < 6"
-          :count="emptyRowCount"
-        />
-      </div>
-      <div
-        v-if="submittedRows.length < 6"
-        id="inputContainer"
-        class="pt-4 flex justify-center w-[300px]"
+      <ul
+        id="letterGrid"
+        class="flex flex-row justify-between w-[300px] flex-wrap"
       >
-        <input
-          v-model="newWord"
-          type="text"
-          placeholder="5-letter guess"
-          class="text-black px-1 uppercase flex-1"
-          @keyup.enter="handleSubmit"
-        >
-        <button
-          class="bg-white border rounded-md text-black px-1 uppercase ml-2 hover:bg-gray-400"
-          @click="handleSubmit"
-        >
-          submit
-        </button>
-      </div>
-      <Solution v-if="submittedRows.length > 0" />
+        <ValidSquares
+          :letters="submittedLetters"
+        />
+        <EmptySquares
+          :count="emptySquareCount"
+        />
+      </ul>
+      <Solution v-if="submittedLetters.length > 0" />
+      <!-- <Keyboard /> -->
     </div>
   </div>
 </template>
