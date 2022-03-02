@@ -47,41 +47,46 @@ provide("store", {store, updateStore})
 
 
 <template>
-  <header class="text-xl text-center pt-4">
-    Wordle Solver
-  </header>
   <div
-    class="flex flex-col items-center pt-4"
+    id="app"
+    class="mx-auto bg-black h-screen"
   >
-    <div id="letterGrid">
-      <ValidRows
-        v-if="submittedRows.length > 0"
-        :rows="submittedRows"
-      />
-      <EmptyRows
-        v-if="submittedRows.length < 6"
-        :count="emptyRowCount"
-      />
-    </div>
+    <header class="text-xl text-center pt-2 md:pt-4">
+      Wordle Solver
+    </header>
     <div
-      v-if="submittedRows.length < 6"
-      id="inputContainer"
-      class="pt-4 flex justify-center w-4/6"
+      class="flex flex-col items-center pt-2 md:pt-4"
     >
-      <input
-        v-model="newWord"
-        type="text"
-        placeholder="5-letter guess"
-        class="text-black px-1 uppercase flex-1"
-        @keyup.enter="handleSubmit"
+      <div id="letterGrid">
+        <ValidRows
+          v-if="submittedRows.length > 0"
+          :rows="submittedRows"
+        />
+        <EmptyRows
+          v-if="submittedRows.length < 6"
+          :count="emptyRowCount"
+        />
+      </div>
+      <div
+        v-if="submittedRows.length < 6"
+        id="inputContainer"
+        class="pt-4 flex justify-center w-[300px]"
       >
-      <button
-        class="bg-white border rounded-md text-black px-1 uppercase ml-2 hover:bg-gray-400"
-        @click="handleSubmit"
-      >
-        submit
-      </button>
+        <input
+          v-model="newWord"
+          type="text"
+          placeholder="5-letter guess"
+          class="text-black px-1 uppercase flex-1"
+          @keyup.enter="handleSubmit"
+        >
+        <button
+          class="bg-white border rounded-md text-black px-1 uppercase ml-2 hover:bg-gray-400"
+          @click="handleSubmit"
+        >
+          submit
+        </button>
+      </div>
+      <Solution v-if="submittedRows.length > 0" />
     </div>
-    <Solution v-if="submittedRows.length > 0" />
   </div>
 </template>
