@@ -1,5 +1,5 @@
 <script setup>
-import {ref, computed, provide, onMounted, onUnmounted} from "vue"
+import {ref, computed, provide, onMounted } from "vue"
 import { v4 as uuid } from 'uuid';
 
 import alphabet from "./resources/Alphabet";
@@ -87,7 +87,7 @@ provide("store", {store, updateStore})
         />
       </ul>
       <Solution v-if="submittedLetters.length > 0" />
-      <!-- <Keyboard /> -->
+      <Keyboard />
     </div>
   </div>
 </template>
