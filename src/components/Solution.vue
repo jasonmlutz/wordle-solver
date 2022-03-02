@@ -1,7 +1,36 @@
 <script setup>
 import { inject, computed } from "vue"
+import {words} from "../resources/Words"
 
 const {store} = inject("store")
+
+function wordContainsAbsentLetter(word) {
+  // returns TRUE if any of the absent letters are in the word
+  const absentLetters = store.value.filter(el => el.flag === 0).map(el => el.letter)
+  return absentLetters.some(letter => word.toUpperCase().includes(letter.toUpperCase()))
+}
+
+function wordOmitsRequiredLetter(word) {
+  // returns TRUE if the word fails to contain a single required letter in the proper position
+  const correctLetterData = store.value.filter(el => el.flag === 2)
+  return correctLetterData.some(data => word.toUpperCase()[data.position] !== data.letter.toUpperCase())
+}
+
+function wordViolatesIncorrectLetter(word) {
+  // returns TRUE if the word contains a present letter in an incorrect position
+  // or fails to contain a present letter
+  const incorrectLetterData = store.value.filter(el => el.flag === 1)
+  return incorrectLetterData.some(data => (
+    (word.toUpperCase()[data.position] === data.letter.toUpperCase()) ||
+    !word.toUpperCase().includes(data.letter.toUpperCase())
+  ))
+}
+
+const filteredWords= computed(() => {
+  // build new array of those words for which the test returns TRUE
+  // that is, remove words which DO have a problem
+  return words.filter(word => !(wordContainsAbsentLetter(word) || wordOmitsRequiredLetter(word) || wordViolatesIncorrectLetter(word)))
+})
 
 // correct
 const correctLetters = computed(() => {
@@ -14,9 +43,9 @@ const correctLetters = computed(() => {
 const incorrectLetters = computed(() => {
   const letters = store.value.filter(el => el.flag === 1)
     .map(el => el.letter)
-    .filter(letter => (
-      !correctLetters.value.includes(letter)
-    ))
+    // .filter(letter => (
+    //   !correctLetters.value.includes(letter)
+    // ))
   return [...new Set(letters)].sort()
 })
 
@@ -24,10 +53,10 @@ const incorrectLetters = computed(() => {
 const absentLetters = computed(() => {
   const letters = store.value.filter(el => el.flag === 0)
     .map(el => el.letter)
-    .filter(letter => (
-      !correctLetters.value.includes(letter) &&
-      !incorrectLetters.value.includes(letter)
-    ))
+    // .filter(letter => (
+    //   !correctLetters.value.includes(letter) &&
+    //   !incorrectLetters.value.includes(letter)
+    // ))
   return [...new Set(letters)].sort()
 })
 
@@ -48,4 +77,22 @@ const absentLetters = computed(() => {
       Letters in answer, known position: {{ correctLetters.join(", ") }}
     </li>
   </ul>
+  <!-- <button
+    class="bg-white border rounded-md text-black px-1 uppercase ml-2 hover:bg-gray-400 mt-4"
+    @click="filterWords"
+  >
+    SOLVE
+  </button> -->
+  <div
+    v-if="filteredWords && filteredWords.length < 25"
+    class="pt-4 px-4 uppercase"
+  >
+    Words: {{ filteredWords.join(", ") }}
+  </div>
+  <div
+    v-if="filteredWords"
+    class="pt-4"
+  >
+    Count: {{ filteredWords.length }}
+  </div>
 </template>
