@@ -67,14 +67,14 @@ const buttonStyle = ref("text-s border rounded-md bg-gray-500 m-0.5 w-12 h-14 pt
     </ul>
     <ul
       id="keyboard-third-row"
-      class="flex flex-row justify-center"
+      class="flex flex-row justify-center ml-[3.25rem]"
     >
-      <li
+      <!-- <li
         :class="buttonStyle"
         @click="toggleKeyboard"
       >
         HIDE
-      </li>
+      </li> -->
       <li
         v-for="element in thirdRow"
         :key="element.index"
