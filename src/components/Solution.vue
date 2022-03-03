@@ -13,33 +13,62 @@ const props = defineProps({
 })
 
 const {store} = inject("store")
+// store is be an array of the form 
+// store[index] = {letter, position, flag}
 
-function wordContainsAbsentLetter(word) {
-  // returns TRUE if any of the absent letters are in the word
-  const absentLetters = store.value.filter(el => el.flag === 0).map(el => el.letter)
-  return absentLetters.some(letter => word.toUpperCase().includes(letter.toUpperCase()))
+function wordAvoidsAbsentLetters(word) {
+  // grab all store objects corresponding to letters NOT present in the word
+  var absentLetters = store.value.filter(el => el.flag === 0)
+  // map to just the letters; drop the position and flag
+  absentLetters = absentLetters.map(el => el.letter)
+
+  // check whether the word contains any of the absent letters
+  // returns TRUE if the test is TRUE for every element of absentLetters
+  // i.e. 
+  // returns TRUE if and only if the word FAILS to contain an absent letter
+  return absentLetters.every(letter => !word.toUpperCase().includes(letter.toUpperCase()))
 }
 
-function wordOmitsRequiredLetter(word) {
-  // returns TRUE if the word fails to contain a single required letter in the proper position
-  const correctLetterData = store.value.filter(el => el.flag === 2)
-  return correctLetterData.some(data => word.toUpperCase()[data.position] !== data.letter.toUpperCase())
+function wordCorrectlyContainsRequiredLetter(word) {
+  // grab all store objects corresponding to required letters
+  var correctLetterData = store.value.filter(el => el.flag === 2)
+  // map to just {letter, position}; drop the flag
+  correctLetterData = correctLetterData.map( el => {
+    return {letter: el.letter, position: el.position}
+  })
+
+  // check whether the word contains each required letter in each required position
+  // returns TRUE if and only if the word contains each required letter in the required position
+  return correctLetterData.every(data => word.toUpperCase()[data.position] === data.letter.toUpperCase())
 }
 
-function wordViolatesIncorrectLetter(word) {
-  // returns TRUE if the word contains a present letter in an incorrect position
-  // or fails to contain a present letter
-  const incorrectLetterData = store.value.filter(el => el.flag === 1)
-  return incorrectLetterData.some(data => (
-    (word.toUpperCase()[data.position] === data.letter.toUpperCase()) ||
-    !word.toUpperCase().includes(data.letter.toUpperCase())
+function wordRespectsIncorrectLetterData(word) {
+  // grab all store objects corresponding to required letters
+  var incorrectLetterData = store.value.filter(el => el.flag === 1)
+  // map to just {letter, position}; drop the flag
+  incorrectLetterData = incorrectLetterData.map( el => {
+    return {letter: el.letter, position: el.position}
+  })
+
+  // check whether the word contains EACH incorrect letter and NOT in the incorrect position
+  // returns TRUE if and only FOR EACH incorrectly-positioned letter
+  // (1) the word contains the incorrectly-positioned letter
+  // AND
+  // (2) doesn't contain the letter in the incorrect position
+  return incorrectLetterData.every(data => (
+    word.toUpperCase().includes(data.letter.toUpperCase()) && 
+    word.toUpperCase()[data.position] !== data.letter.toUpperCase()
   ))
 }
 
 const filteredWords= computed(() => {
-  // build new array of those words for which the test returns TRUE
-  // that is, remove words which DO have a problem
-  return words.filter(word => !(wordContainsAbsentLetter(word) || wordOmitsRequiredLetter(word) || wordViolatesIncorrectLetter(word)))
+  // create a new array of words which pass the test
+  // 
+  return words.filter(word => (
+    wordAvoidsAbsentLetters(word) &&
+    wordCorrectlyContainsRequiredLetter(word) &&
+    wordRespectsIncorrectLetterData(word)
+  ))
 })
 
 // correct
@@ -78,32 +107,19 @@ const buttonMessage = computed(() => {
 </script>
 
 <template>
-  <!-- <ul
-    class="pt-4"
-  >
-    <li>
-      Letters not in answer: {{ absentLetters.join(", ") }}
-    </li>
-    <li>
-      Letters in answer, unknown position: {{ incorrectLetters.join(", ") }}
-    </li>
-    <li>
-      Letters in answer, known position: {{ correctLetters.join(", ") }}
-    </li>
-  </ul> -->
   <div
     class="pt-2 md:pt-4"
   >
     Potential Solutions: {{ filteredWords.length }}
     <button
-      class="bg-white border rounded-md text-black px-1 uppercase ml-2 hover:bg-gray-400 mt-4 uppercase"
+      class="bg-white border rounded-md text-black px-1 uppercase ml-2 hover:bg-gray-400 mt-4 uppercase w-16"
       @click="toggleKeyboard"
     >
       {{ buttonMessage }}
     </button>
   </div>
   <div
-    v-if="filteredWords && filteredWords.length < 500 && !showKeyboard"
+    v-if="filteredWords.length && filteredWords.length < 500 && !showKeyboard"
     class="pt-2 px-3 mt-2 uppercase bg-gray-800 h-[150px] w-[350px] overflow-y-auto"
   >
     {{ filteredWords.join(", ") }}
@@ -114,12 +130,10 @@ const buttonMessage = computed(() => {
   >
     Solutions will be displayed when there are fewer than 500 options.
   </div>
-  <!-- <button
-    v-if="
-    !showKeyboard"
-    class="bg-white border rounded-md text-black px-1 uppercase ml-2 hover:bg-gray-400 mt-4 uppercase"
-    @click="toggleKeyboard"
+  <div
+    v-if="filteredWords.length === 0 && !showKeyboard"
+    class="pt-2 md:pt-4"
   >
-    show keyboard
-    </button> -->
+    No potential solutions.
+  </div>
 </template>
