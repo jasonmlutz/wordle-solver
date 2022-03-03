@@ -33,7 +33,7 @@ function toggleKeyboard() {
 }
 
 const emptySquareCount= computed(() => {
-  return 30 - submittedLetters.value.length
+  return 30 - submittedLetters.value.length - 1
 })
 
 function handleSubmit(letter) {
@@ -92,7 +92,21 @@ provide("store", {store, updateStore})
         <ValidSquares
           :letters="submittedLetters"
         />
+        <li
+          v-if="emptySquareCount >= 0"
+          id="cursorSquare"
+          class="w-[60px] h-[60px]"
+        >
+          <div class="m-1 h-[52px] w-[52px] flex flex-row justify-center bg-black border-2 border-gray-200 animate-pulse">
+            <div
+              class="text-3xl pt-1.5 uppercase"
+            >
+              {{ " " }}
+            </div>
+          </div>
+        </li>
         <EmptySquares
+          v-if="emptySquareCount >= 0"
           :count="emptySquareCount"
         />
       </ul>
