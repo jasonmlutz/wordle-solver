@@ -70,6 +70,10 @@ const absentLetters = computed(() => {
   return [...new Set(letters)].sort()
 })
 
+const buttonMessage = computed(() => {
+  return props.showKeyboard ? "SHOW" : "HIDE"
+})
+
 
 </script>
 
@@ -88,22 +92,34 @@ const absentLetters = computed(() => {
     </li>
   </ul> -->
   <div
+    class="pt-2 md:pt-4"
+  >
+    Potential Solutions: {{ filteredWords.length }}
+    <button
+      class="bg-white border rounded-md text-black px-1 uppercase ml-2 hover:bg-gray-400 mt-4 uppercase"
+      @click="toggleKeyboard"
+    >
+      {{ buttonMessage }}
+    </button>
+  </div>
+  <div
     v-if="filteredWords && filteredWords.length < 500 && !showKeyboard"
-    class="py-2 px-3 mt-2 uppercase bg-gray-800 h-[150px] w-[350px] overflow-y-auto"
+    class="pt-2 px-3 mt-2 uppercase bg-gray-800 h-[150px] w-[350px] overflow-y-auto"
   >
     {{ filteredWords.join(", ") }}
   </div>
   <div
-    v-if="filteredWords"
-    class="pt-4"
+    v-if="filteredWords.length >= 500 && !showKeyboard"
+    class="pt-2 md:pt-4"
   >
-    Potential Solutions: {{ filteredWords.length }}
+    Solutions will be displayed when there are fewer than 500 options.
   </div>
-  <button
-    v-if="!showKeyboard"
+  <!-- <button
+    v-if="
+    !showKeyboard"
     class="bg-white border rounded-md text-black px-1 uppercase ml-2 hover:bg-gray-400 mt-4 uppercase"
     @click="toggleKeyboard"
   >
     show keyboard
-  </button>
+    </button> -->
 </template>
