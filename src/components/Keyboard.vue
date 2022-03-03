@@ -11,6 +11,9 @@ const props = defineProps({
   },
   toggleKeyboard: {
     type: Function,
+  },
+  clearAllLetters: {
+    type: Function,
   }
 })
 
@@ -67,14 +70,14 @@ const buttonStyle = ref("text-s border rounded-md bg-gray-500 m-0.5 w-12 h-14 pt
     </ul>
     <ul
       id="keyboard-third-row"
-      class="flex flex-row justify-center ml-[3.25rem]"
+      class="flex flex-row justify-center"
     >
-      <!-- <li
-        :class="buttonStyle"
-        @click="toggleKeyboard"
+      <li
+        :class="buttonStyle + ` text-xs`"
+        @click="clearAllLetters"
       >
-        HIDE
-      </li> -->
+        CLEAR
+      </li>
       <li
         v-for="element in thirdRow"
         :key="element.index"
