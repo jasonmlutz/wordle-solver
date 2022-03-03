@@ -41,7 +41,7 @@ function handleSubmit(letter) {
     const newLetter = {
       letter: letter, 
       id: uuid(), 
-      position: (submittedLetters.value.length + 1) % 5, 
+      position: (submittedLetters.value.length) % 5, 
       index: submittedLetters.value.length,
     }
     submittedLetters.value.push(newLetter)
@@ -54,12 +54,11 @@ function deleteLastLetter() {
 }
 
 const store = ref([])
+// store will be an array of the form 
+// store[index] = {letter, position, flag}
 
 function updateStore(letter, position, flag, index) {
-  store.value = store.value.filter(el => (
-    !(el.position === position && el.letter === letter)
-  ))
-  store.value.push({letter, position, flag, index})
+  store.value[index] = {letter, position, flag}
 }
 
 provide("store", {store, updateStore})
