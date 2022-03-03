@@ -53,13 +53,6 @@ function deleteLastLetter() {
   store.value = store.value.filter(data => data.index !== lastLetter.index)
 }
 
-function clearAllLetters() {
-  if (window.confirm("Do you really want to clear all letters?")) {
-    submittedLetters.value = []
-    store.value = []
-  }
-}
-
 const store = ref([])
 // store will be an array of the form 
 // store[index] = {letter, position, flag}
@@ -70,6 +63,12 @@ function updateStore(letter, position, flag, index) {
 
 provide("store", {store, updateStore})
 
+  function clearAllLetters() {
+    if (window.confirm("Do you really want to clear all letters?")) {
+      submittedLetters.value = []
+      store.value.length = 0
+    }
+  }
 
 </script>
 
