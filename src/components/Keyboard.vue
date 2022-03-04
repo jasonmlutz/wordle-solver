@@ -42,8 +42,9 @@ function handleClear() {
 
 const { store } = inject("store");
 
-watch(store.value, () => {
-  keyboardKeys.value = keyboardKeys.value.map(key => {
+watch(store, 
+  () => {
+    keyboardKeys.value = keyboardKeys.value.map(key => {
     var reversedStore = [...store.value].reverse()
     var letterData = reversedStore.find(data => data.letter.toUpperCase() === key.letter.toUpperCase())
     letterData = letterData || {}
@@ -64,8 +65,10 @@ watch(store.value, () => {
     }
 
     return {...key, color: letterColor}
-  })
-})
+    })
+  },
+  { deep: true}
+)
 </script>
 
 <template>

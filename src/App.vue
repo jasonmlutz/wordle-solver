@@ -66,7 +66,7 @@ provide("store", {store, updateStore})
   function clearAllLetters() {
     if (window.confirm("Do you really want to clear all letters?")) {
       submittedLetters.value = []
-      store.value.length = 0
+      store.value = []
     }
   }
 
