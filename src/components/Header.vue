@@ -9,12 +9,7 @@ function toggleMenu() {
   initialLoad.value = false
 }
 
-const {settings, updateSettings} = inject("settings")
-
-function toggleAutoReload() {
-  updateSettings("autoReload", !settings.value.autoReload)
-  console.log(settings.value.autoReload)
-}
+const {settings} = inject("settings")
 
 </script>
 
@@ -59,9 +54,8 @@ function toggleAutoReload() {
         <li>
           <input
             id="checkbox"
-            :value="settings.autoReload"
+            v-model="settings.autoReload"
             type="checkbox"
-            @click="toggleAutoReload"
           >
           <label
             for="checkbox"
