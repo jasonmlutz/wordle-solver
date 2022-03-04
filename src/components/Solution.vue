@@ -79,7 +79,6 @@ watch(
   store,
   () => {
     if (settings.value.autoReload) {
-      console.log("filtered words updated!")
       filteredWords.value = filterWords()
     } else {
       refreshRequired.value = true
@@ -99,7 +98,6 @@ const buttonMessage = computed(() => {
 })
 
 function updateFilteredWords() {
-  console.log("filtered words updated!")
   refreshRequired.value = false
   filteredWords.value = filterWords()
 }
