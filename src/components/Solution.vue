@@ -64,7 +64,7 @@ function wordRespectsIncorrectLetterData(word) {
 
 const { settings } = inject("settings")
 
-function filterWords() {
+async function filterWords() {
   return words.filter(word => (
     wordAvoidsAbsentLetters(word) &&
     wordCorrectlyContainsRequiredLetter(word) &&
@@ -97,9 +97,14 @@ const buttonMessage = computed(() => {
   )
 })
 
-function updateFilteredWords() {
+const showLoading = ref(false)
+
+async function updateFilteredWords() {
+  showLoading.value = true
+  const newFilteredWords = await filterWords()
+  filteredWords.value = newFilteredWords
   refreshRequired.value = false
-  filteredWords.value = filterWords()
+  showLoading.value = false
 }
 
 
@@ -146,7 +151,7 @@ function updateFilteredWords() {
   >
     <div class="pt-2 md:pt-4">
       <button
-        class="bg-white border rounded-md text-black px-1 uppercase ml-2 hover:bg-gray-400 uppercase"
+        class="bg-white border rounded-md text-black px-1 uppercase hover:bg-gray-400 uppercase"
         @click="toggleKeyboard"
       >
         {{ buttonMessage }}
@@ -161,11 +166,41 @@ function updateFilteredWords() {
         class="pt-2 md:pt-4"
       >
         <button
-          class="bg-white border rounded-md text-black px-1 uppercase ml-2 hover:bg-gray-400 uppercase"
+          class="bg-white border rounded-md text-black px-1 uppercase hover:bg-gray-400 uppercase"
           @click="updateFilteredWords"
         >
           Update List
         </button>
+        <div
+          v-if="showLoading"
+          class="pt-2 md:pt-4 mx-4"
+        >
+          <svg
+            class="animate-spin m-[5px] h-16 w-16 mx-auto"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            />
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            />
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            />
+          </svg>
+        </div>
       </div>
       <div
         v-else
