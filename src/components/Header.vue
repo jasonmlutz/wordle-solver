@@ -1,11 +1,12 @@
 <script setup>
 import {ref, inject} from "vue"
 
-const showMenu = ref(false)
+const showMenu = ref(true)
+const initialLoad = ref(true)
 
 function toggleMenu() {
-  console.log("menuToggled!")
   showMenu.value = !showMenu.value
+  initialLoad.value = false
 }
 
 const {settings, updateSettings} = inject("settings")
@@ -48,7 +49,13 @@ function toggleAutoReload() {
       id="settingsMenu"
       class="absolute inset-y-14 left-4 z-20"
     >
-      <ul class=" bg-gray-700 border rounded-md p-3">
+      <ul class="relative bg-gray-700 border rounded-md p-3">
+        <li
+          v-if="initialLoad"
+          class="uppercase text-green-500 text-xl text-center"
+        >
+          new feature
+        </li>
         <li>
           <input
             id="checkbox"
@@ -61,11 +68,20 @@ function toggleAutoReload() {
             class="pl-1"
           >Update solutions automatically</label>
         </li>
+        <li class=" pt-2 md:pt-4 flex flex-col items-center">
+          <button
+            class="bg-white border rounded-md text-black px-1 uppercase hover:bg-gray-400 uppercase"
+            @click="toggleMenu"
+          >
+            close
+          </button>
+        </li>
       </ul>
     </div>
     <div
       v-if="showMenu"
       class="absolute top-0 v-10 bg-black opacity-50 h-screen w-[360px]"
+      @click="toggleMenu"
     />
   </div>
 </template>

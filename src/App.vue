@@ -71,7 +71,7 @@ function clearAllLetters() {
   }
 }
 
-const settings = ref({autoReload: false})
+const settings = ref({autoReload: true})
 function updateSettings(key, value) {
   settings.value[key] = value
 }
