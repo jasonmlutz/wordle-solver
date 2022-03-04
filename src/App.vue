@@ -64,12 +64,19 @@ function updateStore(letter, position, flag, index) {
 
 provide("store", {store, updateStore})
 
-  function clearAllLetters() {
-    if (window.confirm("Do you really want to clear all letters?")) {
-      submittedLetters.value = []
-      store.value = []
-    }
+function clearAllLetters() {
+  if (window.confirm("Do you really want to clear all letters?")) {
+    submittedLetters.value = []
+    store.value = []
   }
+}
+
+const settings = ref({autoReload: false})
+function updateSettings(key, value) {
+  settings.value[key] = value
+}
+
+provide("settings", {settings, updateSettings})
 
 </script>
 
