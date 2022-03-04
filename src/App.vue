@@ -8,6 +8,7 @@ import ValidSquares from "./components/ValidSquares.vue";
 import EmptySquares from "./components/EmptySquares.vue";
 import Solution from "./components/Solution.vue";
 import Keyboard from "./components/Keyboard.vue"
+import Header from "./components/Header.vue"
 
 onMounted(() => {
     window.addEventListener("keypress", function(e) {
@@ -78,9 +79,7 @@ provide("store", {store, updateStore})
     id="app"
     class="mx-auto bg-black h-screen"
   >
-    <header class="text-xl text-center pt-2 md:pt-4">
-      Wordle Solver
-    </header>
+    <Header />
     <div
       class="flex flex-col items-center pt-2 md:pt-4"
     >
