@@ -18,7 +18,7 @@ function toggleSettings() {
     <span class="text-xl">Wordle Solver</span>
     <div
       id="settingsIcon"
-      class="text-2xl absolute inset-y-3 right-3"
+      class="text-2xl absolute inset-y-3 right-3 z-30"
     >
       <svg
         stroke="currentColor"
@@ -39,9 +39,17 @@ function toggleSettings() {
     <div
       v-if="showSettings"
       id="settingsMenu"
-      class="absolute text-xl inset-y-10 right-4 z-10 bg-gray-700 w-20 h-20 border rounded-md p-1"
+      class="absolute text-xl inset-y-12 right-6 z-20"
     >
-      MENU
+      <ul class=" bg-gray-700 border rounded-md p-3">
+        <li>Item 1</li>
+        <li>Item 2</li>
+        <li>Item 3</li>
+      </ul>
     </div>
+    <div
+      v-if="showSettings"
+      class="absolute top-0 v-10 bg-black opacity-50 h-screen w-[360px]"
+    />
   </div>
 </template>
