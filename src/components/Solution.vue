@@ -64,7 +64,7 @@ function wordRespectsIncorrectLetterData(word) {
 
 const { settings } = inject("settings")
 
-async function filterWords() {
+function filterWords() {
   return words.filter(word => (
     wordAvoidsAbsentLetters(word) &&
     wordCorrectlyContainsRequiredLetter(word) &&
@@ -99,9 +99,9 @@ const buttonMessage = computed(() => {
 
 const showLoading = ref(false)
 
-async function updateFilteredWords() {
+function updateFilteredWords() {
   showLoading.value = true
-  const newFilteredWords = await filterWords()
+  const newFilteredWords = filterWords()
   filteredWords.value = newFilteredWords
   refreshRequired.value = false
   showLoading.value = false
