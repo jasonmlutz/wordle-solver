@@ -45,8 +45,10 @@ const { store } = inject("store");
 watch(store, 
   () => {
     keyboardKeys.value = keyboardKeys.value.map(key => {
-    var reversedStore = [...store.value].reverse()
-    var letterData = reversedStore.find(data => data.letter.toUpperCase() === key.letter.toUpperCase())
+    var sortedStore = [...store.value].sort((a,b) => a.index - b.index)
+    var letterData = sortedStore.find(data => data.letter.toUpperCase() === key.letter.toUpperCase())
+    // var reversedStore = [...store.value].reverse()
+    // var letterData = reversedStore.find(data => data.letter.toUpperCase() === key.letter.toUpperCase())
     letterData = letterData || {}
     var letterColor
     switch (letterData.flag) {
