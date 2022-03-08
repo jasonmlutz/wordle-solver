@@ -23,6 +23,12 @@ function wordAvoidsAbsentLetters(word) {
   // map to just the letters; drop the position and flag
   absentLetters = absentLetters.map(el => el.letter)
 
+  // account for how Wordle handles duplicate letters
+  var incorrectLetterData = store.value.filter(el => el.flag === 1)
+  incorrectLetterData = incorrectLetterData.map(el => el.letter.toUpperCase())
+
+  absentLetters = absentLetters.filter(el => !incorrectLetterData.includes(el.toUpperCase()))
+
   // check whether the word contains any of the absent letters
   // returns TRUE if the test is TRUE for every element of absentLetters
   // i.e. 
