@@ -45,8 +45,9 @@ const { store } = inject("store");
 function gatherLetterFlags() {
   // iterate over the keyboard keys to update the value
   keyboardKeys.value = keyboardKeys.value.map(keyboardKey => {
-    // for that key, find all associated store entries
-    var associatedStoreElements = store.value.filter(el => el.letter.toUpperCase() === keyboardKey.letter.toUpperCase())
+    // for that key, find all associated store entries,
+    // noting that some store elements may be {}
+    var associatedStoreElements = store.value.filter(el => Object.keys(el).length && el.letter.toUpperCase() === keyboardKey.letter.toUpperCase())
     // gather the flags for those elements
     associatedStoreElements = associatedStoreElements.map(el => el.flag)
     // compute the max index among those store entries, or 0 if no such entries

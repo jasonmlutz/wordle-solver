@@ -51,7 +51,7 @@ function handleSubmit(letter) {
 
 function deleteLastLetter() {
   const lastLetter = submittedLetters.value.pop()
-  store.value = store.value.filter(data => data.index !== lastLetter.index)
+  store.value[lastLetter.index] = {}
 }
 
 const store = ref([])
