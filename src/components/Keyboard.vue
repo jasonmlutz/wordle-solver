@@ -1,6 +1,6 @@
 <script setup>
 
-import {inject, watch, ref} from "vue"
+import {inject, watch, ref, onMounted} from "vue"
 
 const props = defineProps({
   deleteLastLetter: {
@@ -42,33 +42,36 @@ function handleClear() {
 
 const { store } = inject("store");
 
-watch(store, 
-  () => {
-    keyboardKeys.value = keyboardKeys.value.map(key => {
-    var sortedStore = [...store.value].sort((a,b) => a.index - b.index)
-    var letterData = sortedStore.find(data => data.letter.toUpperCase() === key.letter.toUpperCase())
-    // var reversedStore = [...store.value].reverse()
-    // var letterData = reversedStore.find(data => data.letter.toUpperCase() === key.letter.toUpperCase())
-    letterData = letterData || {}
-    var letterColor
-    switch (letterData.flag) {
-    case 0:
-      letterColor = " bg-gray-600"
-      break;
-    case 1:
-      letterColor = " bg-yellow-500"
-      break;
-    case 2:
-      letterColor = " bg-green-800"
-      break;
-    default:
-      letterColor = " bg-gray-600"
-      break;
-    }
+function setKeyColors() {
+  keyboardKeys.value = keyboardKeys.value.map(key => {
+  var sortedStore = [...store.value].sort((a,b) => a.index - b.index)
+  var letterData = sortedStore.find(data => data.letter.toUpperCase() === key.letter.toUpperCase())
+  // var reversedStore = [...store.value].reverse()
+  // var letterData = reversedStore.find(data => data.letter.toUpperCase() === key.letter.toUpperCase())
+  letterData = letterData || {}
+  var letterColor
+  switch (letterData.flag) {
+  case 0:
+    letterColor = " bg-gray-600"
+    break;
+  case 1:
+    letterColor = " bg-yellow-500"
+    break;
+  case 2:
+    letterColor = " bg-green-800"
+    break;
+  default:
+    letterColor = " bg-gray-600"
+    break;
+  }
 
-    return {...key, color: letterColor}
-    })
-  },
+  return {...key, color: letterColor}
+  })
+}
+
+onMounted(setKeyColors)
+
+watch(store, setKeyColors,
   { deep: true}
 )
 </script>
