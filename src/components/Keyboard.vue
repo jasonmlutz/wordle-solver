@@ -30,48 +30,49 @@ keyboardLetters = keyboardLetters.concat(["a", "s", "d", "f", "g", "h", "j", "k"
 keyboardLetters = keyboardLetters.concat(["z", "x", "c", "v", "b", "n", "m"]) // 7 more
 
 const keyboardKeys = ref(keyboardLetters.map((el, index) => {
-  return {letter: el, index: index, color: " bg-gray-600"}
+  return {letter: el, index: index, colorIndex: 0}
 }))
 
 function handleClear() {
   keyboardKeys.value = keyboardKeys.value.map(key => {
-    return {...key, color: " bg-gray-600"}
+    return {...key, colorIndex: 0}
   })
   props.clearAllLetters()
 }
 
 const { store } = inject("store");
 
-function setKeyColors() {
-  keyboardKeys.value = keyboardKeys.value.map(key => {
-  var sortedStore = [...store.value].sort((a,b) => a.index - b.index)
-  var letterData = sortedStore.find(data => data.letter.toUpperCase() === key.letter.toUpperCase())
-  // var reversedStore = [...store.value].reverse()
-  // var letterData = reversedStore.find(data => data.letter.toUpperCase() === key.letter.toUpperCase())
-  letterData = letterData || {}
-  var letterColor
-  switch (letterData.flag) {
-  case 0:
-    letterColor = " bg-gray-600"
-    break;
-  case 1:
-    letterColor = " bg-yellow-500"
-    break;
-  case 2:
-    letterColor = " bg-green-800"
-    break;
-  default:
-    letterColor = " bg-gray-600"
-    break;
-  }
-
-  return {...key, color: letterColor}
+function gatherLetterFlags() {
+  // iterate over the keyboard keys to update the value
+  keyboardKeys.value = keyboardKeys.value.map(keyboardKey => {
+    // for that key, find all associated store entries
+    var associatedStoreElements = store.value.filter(el => el.letter.toUpperCase() === keyboardKey.letter.toUpperCase())
+    // gather the flags for those elements
+    associatedStoreElements = associatedStoreElements.map(el => el.flag)
+    // compute the max index among those store entries, or 0 if no such entries
+    var newColorIndex = associatedStoreElements.length ? Math.max(...associatedStoreElements) : 0
+    // return the keyboardKey with the new colorIndex
+    return {...keyboardKey, colorIndex: newColorIndex}
   })
 }
 
-onMounted(setKeyColors)
+function renderKeyColor(colorIndex) {
+  // this function will translate an input like element.colorIndex to the tailwind color string
+  switch (colorIndex) {
+    case 0:
+      return " bg-gray-600"
+    case 1:
+      return " bg-yellow-500"
+    case 2:
+      return " bg-green-800"
+    default:
+      return " bg-gray-600"
+  }
+}
 
-watch(store, setKeyColors,
+onMounted(gatherLetterFlags)
+
+watch(store, gatherLetterFlags,
   { deep: true}
 )
 </script>
@@ -88,7 +89,7 @@ watch(store, setKeyColors,
       <li
         v-for="element in keyboardKeys.slice(0,10)"
         :key="element.index"
-        :class="letterStyle + element.color"
+        :class="letterStyle + renderKeyColor(element.colorIndex)"
         @click="handleSubmit(element.letter)"
       >
         {{ element.letter }}
@@ -101,7 +102,7 @@ watch(store, setKeyColors,
       <li
         v-for="element in keyboardKeys.slice(10,19)"
         :key="element.index"
-        :class="letterStyle + element.color"
+        :class="letterStyle + renderKeyColor(element.colorIndex)"
         @click="handleSubmit(element.letter)"
       >
         {{ element.letter }}
@@ -120,7 +121,7 @@ watch(store, setKeyColors,
       <li
         v-for="element in keyboardKeys.slice(19, 26)"
         :key="element.index"
-        :class="letterStyle + element.color"
+        :class="letterStyle + renderKeyColor(element.colorIndex)"
         @click="handleSubmit(element.letter)"
       >
         {{ element.letter }}
