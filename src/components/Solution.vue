@@ -13,12 +13,20 @@ const props = defineProps({
   }
 })
 
-function computeAbsentLetters() {
+function computeAbsentLetters(keepPosition = false) {
+  // note the optional argument; this is currently only used for
+  // pseudo-absent letters
   // grab all store objects corresponding to letters NOT present in the word
   var absentLetters = store.value.filter(el => el.flag === 0)
   // map to just the letters; drop the position and flag
   // and capitalize the letter
-  absentLetters = absentLetters.map(el => el.letter.toUpperCase())
+  if (keepPosition) {
+    absentLetters = absentLetters.map(el => {
+      return {letter: el.letter.toUpperCase(), position: el.position}
+    })
+  } else {
+    absentLetters = absentLetters.map(el => el.letter.toUpperCase())
+  }
   // return the result
   return absentLetters
 }
@@ -70,7 +78,6 @@ function wordAvoidsAbsentLetters(word) {
   // next, remove absent letters that also appear as correct letters; this is more subtle
   // consider PAPER where the correct word is CUPID; the first P will be marked as absent
   // instead, it needs to be considered as incorrect and not as absent
-  // TODO implement this consideration in wordRespectsIncorrectLetterData
   absentLetters = absentLetters.filter(el => !correctLetterData.includes(el))
 
   // check whether the word contains any of the absent letters
@@ -103,13 +110,30 @@ function wordRespectsIncorrectLetterData(word) {
   ))
 }
 
+function wordRespectsPseudoAbsentLetterData(word) {
+  // handle 'absent' letters like the first P in the guess PAPER for correct answer CUPID
+  // load absent letters with position data
+  var absentLetterData = computeAbsentLetters(true)
+  // load correct letter data; map to only letter
+  var correctLetterData = computeCorrectLetters().map(el => el.letter)
+
+  // filter out those absent letters that DO NOT have corresponding
+  // correct letter counterparts
+  absentLetterData = absentLetterData.filter(el => correctLetterData.includes(el.letter))
+
+  // return FALSE if the word contains any pseudo-absent letter in its incorrect position,
+  // like the first P in the guess PAPER for correct answer CUPID
+  return absentLetterData.every(data => word.toUpperCase()[data.position] !== data.letter)
+}
+
 const { settings } = inject("settings")
 
 function filterWords() {
   return words.filter(word => (
     wordAvoidsAbsentLetters(word) &&
     wordCorrectlyContainsRequiredLetter(word) &&
-    wordRespectsIncorrectLetterData(word)
+    wordRespectsIncorrectLetterData(word) &&
+    wordRespectsPseudoAbsentLetterData(word)
   ))
 }
 
