@@ -114,12 +114,21 @@ function wordRespectsPseudoAbsentLetterData(word) {
   // handle 'absent' letters like the first P in the guess PAPER for correct answer CUPID
   // load absent letters with position data
   var absentLetterData = computeAbsentLetters(true)
-  // load correct letter data; map to only letter
-  var correctLetterData = computeCorrectLetters().map(el => el.letter)
+  // load correct letter data
+  var correctLetterData = computeCorrectLetters()
 
   // filter out those absent letters that DO NOT have corresponding
   // correct letter counterparts
   absentLetterData = absentLetterData.filter(el => correctLetterData.includes(el.letter))
+
+  // filter out those absent letters for which the absent letter comes AFTER
+  // the correct letter, like the second P in PAPER with correct answer POPPY
+  // that is, keep an absent letter if, for each corresponding correct letter,
+  // the absent letter comes BEFORE the correct letter
+  absentLetterData = absentLetterData.filter(el => {
+    var correspondingCorrectLetterData = correctLetterData.filter(correctEl => correctEl.letter === el.letter)
+    return correspondingCorrectLetterData.every(correctEl =>  el.position < correctEl.position)
+  })
 
   // return FALSE if the word contains any pseudo-absent letter in its incorrect position,
   // like the first P in the guess PAPER for correct answer CUPID
