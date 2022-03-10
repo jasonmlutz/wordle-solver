@@ -55,9 +55,9 @@ function wordAvoidsAbsentLetters(word) {
   // account for how Wordle handles duplicate letters
   // 
   // load incorrect letters and correct letters
-  // filter each to just be letters
-  var incorrectLetterData = computeIncorrectLetters().filter(el => el.letter)
-  var correctLetterData = computeCorrectLetters().filter(el => el.letter)
+  // map each to just be letters
+  var incorrectLetterData = computeIncorrectLetters().map(el => el.letter)
+  var correctLetterData = computeCorrectLetters().map(el => el.letter)
 
   // filter the absent letters so that correct and incorrect letters are not erroneously
   // counted as absent
