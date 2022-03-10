@@ -21,7 +21,8 @@ function wordAvoidsAbsentLetters(word) {
   // grab all store objects corresponding to letters NOT present in the word
   var absentLetters = store.value.filter(el => el.flag === 0)
   // map to just the letters; drop the position and flag
-  absentLetters = absentLetters.map(el => el.letter)
+  // and capitalize the letter
+  absentLetters = absentLetters.map(el => el.letter.toUpperCase())
 
   // account for how Wordle handles duplicate letters
   // load incorrect letters
@@ -35,34 +36,44 @@ function wordAvoidsAbsentLetters(word) {
   // filter the absent letters so that correct and incorrect letters are not erroneously
   // counted as absent
 
-  absentLetters = absentLetters.filter(el => !(incorrectLetterData.includes(el.toUpperCase()) || correctLetterData.includes(el.toUpperCase())))
+  // first, remove absent letters that also appear as incorrect letters; this
+  // only occurs when a guess contains duplicate letters, with neither in the correct
+  // position, and the first instance will be marked as incorrect (yellow)
+  absentLetters = absentLetters.filter(el => !incorrectLetterData.includes(el))
+
+  // next, remove absent letters that also appear as correct letters; this is more subtle
+  // consider PAPER where the correct word is CUPID; the first P will be marked as absent
+  // instead, it needs to be considered as incorrect and not as absent
+  // TODO implement this consideration in wordRespectsIncorrectLetterData
+
+  absentLetters = absentLetters.filter(el => !correctLetterData.includes(el))
 
   // check whether the word contains any of the absent letters
   // returns TRUE if the test is TRUE for every element of absentLetters
   // i.e. 
   // returns TRUE if and only if the word FAILS to contain an absent letter
-  return absentLetters.every(letter => !word.toUpperCase().includes(letter.toUpperCase()))
+  return absentLetters.every(letter => !word.toUpperCase().includes(letter))
 }
 
 function wordCorrectlyContainsRequiredLetter(word) {
   // grab all store objects corresponding to required letters
   var correctLetterData = store.value.filter(el => el.flag === 2)
-  // map to just {letter, position}; drop the flag
+  // map to just {letter, position}; drop the flag and capitalize
   correctLetterData = correctLetterData.map( el => {
-    return {letter: el.letter, position: el.position}
+    return {letter: el.letter.toUpperCase(), position: el.position}
   })
 
   // check whether the word contains each required letter in each required position
   // returns TRUE if and only if the word contains each required letter in the required position
-  return correctLetterData.every(data => word.toUpperCase()[data.position] === data.letter.toUpperCase())
+  return correctLetterData.every(data => word.toUpperCase()[data.position] === data.letter)
 }
 
 function wordRespectsIncorrectLetterData(word) {
   // grab all store objects corresponding to required letters
   var incorrectLetterData = store.value.filter(el => el.flag === 1)
-  // map to just {letter, position}; drop the flag
+  // map to just {letter, position}; drop the flag and capitalize
   incorrectLetterData = incorrectLetterData.map( el => {
-    return {letter: el.letter, position: el.position}
+    return {letter: el.letter.toUpperCase(), position: el.position}
   })
 
   // check whether the word contains EACH incorrect letter and NOT in the incorrect position
@@ -71,8 +82,8 @@ function wordRespectsIncorrectLetterData(word) {
   // AND
   // (2) doesn't contain the letter in the incorrect position
   return incorrectLetterData.every(data => (
-    word.toUpperCase().includes(data.letter.toUpperCase()) && 
-    word.toUpperCase()[data.position] !== data.letter.toUpperCase()
+    word.toUpperCase().includes(data.letter) && 
+    word.toUpperCase()[data.position] !== data.letter
   ))
 }
 
