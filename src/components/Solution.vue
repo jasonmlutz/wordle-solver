@@ -13,29 +13,55 @@ const props = defineProps({
   }
 })
 
-const {store} = inject("store")
-// store is be an array of the form 
-// store[index] = {letter, position, flag}
-
-function wordAvoidsAbsentLetters(word) {
+function computeAbsentLetters() {
   // grab all store objects corresponding to letters NOT present in the word
   var absentLetters = store.value.filter(el => el.flag === 0)
   // map to just the letters; drop the position and flag
   // and capitalize the letter
   absentLetters = absentLetters.map(el => el.letter.toUpperCase())
+  // return the result
+  return absentLetters
+}
+
+function computeIncorrectLetters() {
+  // grab all store objects corresponding to required letters
+  var incorrectLetterData = store.value.filter(el => el.flag === 1)
+  // map to just {letter, position}; drop the flag and capitalize
+  incorrectLetterData = incorrectLetterData.map( el => {
+    return {letter: el.letter.toUpperCase(), position: el.position}
+  })
+  // return the result
+  return incorrectLetterData
+}
+
+function computeCorrectLetters() {
+  // grab all store objects corresponding to required letters
+  var correctLetterData = store.value.filter(el => el.flag === 2)
+  // map to just {letter, position}; drop the flag and capitalize
+  correctLetterData = correctLetterData.map( el => {
+    return {letter: el.letter.toUpperCase(), position: el.position}
+  })
+  // return the result
+  return correctLetterData
+}
+
+const {store} = inject("store")
+// store is be an array of the form 
+// store[index] = {letter, position, flag}
+
+function wordAvoidsAbsentLetters(word) {
+  var absentLetters = computeAbsentLetters()
 
   // account for how Wordle handles duplicate letters
-  // load incorrect letters
-  var incorrectLetterData = store.value.filter(el => el.flag === 1)
-  incorrectLetterData = incorrectLetterData.map(el => el.letter.toUpperCase())
-
-  // load correct letters
-  var correctLetterData = store.value.filter(el => el.flag === 2)
-  correctLetterData = correctLetterData.map(el => el.letter.toUpperCase())
+  // 
+  // load incorrect letters and correct letters
+  // filter each to just be letters
+  var incorrectLetterData = computeIncorrectLetters().filter(el => el.letter)
+  var correctLetterData = computeCorrectLetters().filter(el => el.letter)
 
   // filter the absent letters so that correct and incorrect letters are not erroneously
   // counted as absent
-
+  // 
   // first, remove absent letters that also appear as incorrect letters; this
   // only occurs when a guess contains duplicate letters, with neither in the correct
   // position, and the first instance will be marked as incorrect (yellow)
@@ -45,7 +71,6 @@ function wordAvoidsAbsentLetters(word) {
   // consider PAPER where the correct word is CUPID; the first P will be marked as absent
   // instead, it needs to be considered as incorrect and not as absent
   // TODO implement this consideration in wordRespectsIncorrectLetterData
-
   absentLetters = absentLetters.filter(el => !correctLetterData.includes(el))
 
   // check whether the word contains any of the absent letters
@@ -56,25 +81,16 @@ function wordAvoidsAbsentLetters(word) {
 }
 
 function wordCorrectlyContainsRequiredLetter(word) {
-  // grab all store objects corresponding to required letters
-  var correctLetterData = store.value.filter(el => el.flag === 2)
-  // map to just {letter, position}; drop the flag and capitalize
-  correctLetterData = correctLetterData.map( el => {
-    return {letter: el.letter.toUpperCase(), position: el.position}
-  })
-
+  // load correct letters
+  const correctLetterData = computeCorrectLetters()
   // check whether the word contains each required letter in each required position
   // returns TRUE if and only if the word contains each required letter in the required position
   return correctLetterData.every(data => word.toUpperCase()[data.position] === data.letter)
 }
 
 function wordRespectsIncorrectLetterData(word) {
-  // grab all store objects corresponding to required letters
-  var incorrectLetterData = store.value.filter(el => el.flag === 1)
-  // map to just {letter, position}; drop the flag and capitalize
-  incorrectLetterData = incorrectLetterData.map( el => {
-    return {letter: el.letter.toUpperCase(), position: el.position}
-  })
+  // load incorrect letters
+  const incorrectLetterData = computeIncorrectLetters()
 
   // check whether the word contains EACH incorrect letter and NOT in the incorrect position
   // returns TRUE if and only FOR EACH incorrectly-positioned letter
