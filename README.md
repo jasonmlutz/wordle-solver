@@ -3,10 +3,7 @@
 User-friendly tool for finding potential solutions to the popular puzzle game [Wordle](https://www.nytimes.com/games/wordle/index.html) and its variations.
 
 ## Tech
-Built using [Vue](https://vuejs.org/) and styled using [Tailwind CSS](https://tailwindcss.com/). Deployed to [Heroku](https://www.heroku.com/home). 
-
-## Demo
-View live on Heroku: [http://jml-ws.herokuapp.com/](http://jml-ws.herokuapp.com/)
+Built using [Vue](https://vuejs.org/) and styled using [Tailwind CSS](https://tailwindcss.com/).
 
 ## User Interface
 
