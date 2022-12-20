@@ -5,6 +5,9 @@ User-friendly tool for finding potential solutions to the popular puzzle game [W
 ## Tech
 Built using [Vue](https://vuejs.org/) and styled using [Tailwind CSS](https://tailwindcss.com/).
 
+## Live Version
+View live on [Netlify](https://www.netlify.com/)! [statuesque-brioche-4b7509.netlify.app](<https://statuesque-brioche-4b7509.netlify.app/>)
+
 ## User Interface
 
 #### Landing Page
